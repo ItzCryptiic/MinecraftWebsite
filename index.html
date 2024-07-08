@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Server Info</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: black; /* Solid color background initially */
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        #password-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        #content {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            margin: 50px auto;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            padding: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        button {
+            background-color: #48bd48;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        #comments-section {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .comment {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .comment-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .like-btn {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .like-count {
+            font-weight: bold;
+        }
+
+        .image-section {
+            margin: 20px 0;
+        }
+
+        .image-section img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        #show-button {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+        }
+
+        /* Hidden button style */
+        #remove-comments-btn {
+            display: none;
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background-color: #b31414;
+            color: white;
+            padding: 2px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 2px;
+        }
+        #dcbutton {
+            background-color: #1e92ff;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 17px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="password-container">
+        <h2>Enter Password</h2>
+        <input type="password" id="password-input">
+        <button onclick="checkPassword()">Submit</button>
+        <p id="password-error" style="color: red;"></p>
+    </div>
+    <div id="content" style="display: none;">
+        <button onclick="viewBackgroundOnly()">View Background Only</button>
+        <div class="info">
+            <h1>Ajo to Wir haben zu craften</h1>
+            <p>Server Address: minecraft.server.address</p>
+            <p>Join us for +1000 Aura
+            <P>gebaut wird in der nähe des Spawns (siehe Bild)</P>
+            <p>fette Brasilianer werden ins nächste Biom abgeschoben</p>
+            <button id= "dcbutton" onclick="window.location.href ='https://discord.gg/GUFfrfxzqj'";>Discord
+            </button>
+            </p>
+        </div>
+        <div class="image-section">
+            <img src="serverbild.png" alt="Minecraft Image">
+        </div>
+        <div class="fight-schedule">
+            <h2>Wann Enderdrachenfight?</h2>
+            <textarea id="comment" placeholder="Enter your comment"></textarea>
+            <button onclick="postComment()">Post Comment</button>
+            <div id="comments-section"></div>
+        </div>
+    </div>
+    <button id="show-button" onclick="showContent()" style="display: none;">Show</button>
+    
+    <!-- Hidden button to remove all comments -->
+    <button id="remove-comments-btn" onclick="removeAllComments()">Remove All Comments</button>
+    <div class="legal-content">
+        (C) - Rainer Winkler
+        </div>
+    <script>
+        const correctPassword = "spe";  // Replace this with your desired password
+
+        let commentsData = []; // Global array to store comments with likes
+
+        function checkPassword() {
+            const passwordInput = document.getElementById('password-input').value;
+            const passwordError = document.getElementById('password-error');
+
+            if (passwordInput === correctPassword) {
+                document.getElementById('password-container').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                document.body.style.background = "url('minecraft-background2.jpg') no-repeat center center fixed";
+                document.body.style.backgroundSize = "cover";
+            } else {
+                passwordError.textContent = 'Incorrect password. Please try again.';
+            }
+        }
+
+        function postComment() {
+            const commentText = document.getElementById('comment').value;
+            if (commentText) {
+                const commentsSection = document.getElementById('comments-section');
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment';
+
+                const commentContent = document.createElement('div');
+                commentContent.className = 'comment-content';
+                commentContent.textContent = commentText;
+
+                const commentActions = document.createElement('div');
+                commentActions.className = 'comment-actions';
+
+                const likeButton = document.createElement('button');
+                likeButton.className = 'like-btn';
+                likeButton.textContent = 'Like';
+                likeButton.onclick = function() { likeComment(this); };
+
+                const likeCount = document.createElement('span');
+                likeCount.className = 'like-count';
+                likeCount.textContent = '0';
+
+                commentActions.appendChild(likeButton);
+                commentActions.appendChild(likeCount);
+
+                commentDiv.appendChild(commentContent);
+                commentDiv.appendChild(commentActions);
+
+                commentsSection.appendChild(commentDiv);
+
+                // Save comment to local storage
+                saveComment(commentText);
+
+                // Clear the textarea
+                document.getElementById('comment').value = '';
+
+                // Add comment to commentsData array
+                commentsData.push({ text: commentText, likes: 0 });
+
+                // Resort comments based on likes (descending order)
+                sortCommentsByLikes();
+
+                // Display the remove button once comments are posted
+                document.getElementById('remove-comments-btn').style.display = 'block';
+            }
+        }
+
+        function likeComment(button) {
+            const commentDiv = button.parentElement.parentElement; // Get the parent comment div
+            const index = Array.from(commentDiv.parentElement.children).indexOf(commentDiv); // Find index of the comment
+
+            // Increment likes and update UI
+            commentsData[index].likes++;
+            const likeCount = commentDiv.querySelector('.like-count');
+            likeCount.textContent = commentsData[index].likes;
+
+            // Resort comments based on likes (descending order)
+            sortCommentsByLikes();
+        }
+
+        function sortCommentsByLikes() {
+            const commentsSection = document.getElementById('comments-section');
+
+            // Remove all comments from DOM
+            while (commentsSection.firstChild) {
+                commentsSection.removeChild(commentsSection.firstChild);
+            }
+
+            // Sort comments by likes (descending)
+            commentsData.sort((a, b) => b.likes - a.likes);
+
+            // Re-render comments in sorted order
+            commentsData.forEach(comment => {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment';
+
+                const commentContent = document.createElement('div');
+                commentContent.className = 'comment-content';
+                commentContent.textContent = comment.text;
+
+                const commentActions = document.createElement('div');
+                commentActions.className = 'comment-actions';
+
+                const likeButton = document.createElement('button');
+                likeButton.className = 'like-btn';
+                likeButton.textContent = 'Like';
+                likeButton.onclick = function() { likeComment(this); };
+
+                const likeCount = document.createElement('span');
+                likeCount.className = 'like-count';
+                likeCount.textContent = comment.likes;
+
+                commentActions.appendChild(likeButton);
+                commentActions.appendChild(likeCount);
+
+                commentDiv.appendChild(commentContent);
+                commentDiv.appendChild(commentActions);
+
+                commentsSection.appendChild(commentDiv);
+            });
+        }
+
+        function saveComment(comment) {
+            let comments = JSON.parse(localStorage.getItem('comments')) || [];
+            comments.push(comment);
+            localStorage.setItem('comments', JSON.stringify(comments));
+        }
+
+        function loadComments() {
+            const commentsSection = document.getElementById('comments-section');
+            const storedComments = JSON.parse(localStorage.getItem('comments')) || [];
+            storedComments.forEach(comment => {
+                commentsData.push({ text: comment, likes: 0 });
+            });
+
+            // Display comments sorted by likes initially
+            sortCommentsByLikes();
+        }
+
+        function viewBackgroundOnly() {
+            document.getElementById('content').style.display = 'none';
+            document.getElementById('show-button').style.display = 'block';
+        }
+
+        function showContent() {
+            document.getElementById('content').style.display = 'block';
+            document.getElementById('show-button').style.display = 'none';
+        }
+
+        function removeAllComments() {
+            // Remove all comments from the DOM
+            const commentsSection = document.getElementById('comments-section');
+            commentsSection.innerHTML = '';
+
+            // Clear commentsData array
+            commentsData = [];
+
+            // Clear local storage
+            localStorage.removeItem('comments');
+
+            // Hide the remove button again
+            document.getElementById('remove-comments-btn').style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', loadComments);
+    </script>
+</body>
+</html>
+
+       
